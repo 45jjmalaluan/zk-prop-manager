@@ -1,0 +1,6 @@
+rootProject.name = 'zk-prop-manager'
+include 'core'
+findProject(':core')?.name = 'zk-prop-manager-core'
+include 'web'
+findProject(':web')?.name = 'zk-prop-manager-web'
+

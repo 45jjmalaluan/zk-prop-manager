@@ -1,0 +1,11 @@
+project.description = 'ZooKeeper Property Manager core'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "$curatorGroup:curator-framework:$curatorVersion"
+
+    testCompile "$curatorGroup:curator-test:$curatorVersion"
+}

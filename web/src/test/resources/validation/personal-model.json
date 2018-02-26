@@ -1,0 +1,5 @@
+{
+  "node": "personal",
+  "key": "name",
+  "regExp": "[A-Z][a-z]*( [A-Z][a-z]*)*"
+}

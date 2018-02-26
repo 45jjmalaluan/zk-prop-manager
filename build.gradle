@@ -1,0 +1,38 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group 'com.zk.prop.manager'
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        // spring
+        springframeworkGroup   = 'org.springframework'
+        springframeworkVersion = '4.3.13.RELEASE'
+        springBootGroup        = 'org.springframework.boot'
+        springBootVersion      = '1.5.9.RELEASE'
+        // zookeeper
+        curatorGroup           = 'org.apache.curator'
+        curatorVersion         = '4.0.0'
+    }
+
+    dependencies {
+        compile "$springBootGroup:spring-boot-starter-web:$springBootVersion"
+        compile "org.apache.commons:commons-lang3:3.7"
+
+        //test
+        testCompile "$springframeworkGroup:spring-test:$springframeworkVersion"
+        testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.13'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
+            exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        }
+    }
+}

@@ -1,0 +1,20 @@
+apply plugin: 'org.springframework.boot'
+
+project.description = 'ZooKeeper Property Manager web'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':zk-prop-manager-core')
+}
+
+buildscript {
+    dependencies {
+        classpath("$springBootGroup:spring-boot-gradle-plugin:$springBootVersion")
+    }
+    repositories {
+        mavenCentral()
+    }
+}
