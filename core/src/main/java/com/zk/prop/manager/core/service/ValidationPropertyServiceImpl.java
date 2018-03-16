@@ -1,9 +1,16 @@
 package com.zk.prop.manager.core.service;
 
+import com.zk.prop.manager.core.model.DataPair;
+import com.zk.prop.manager.core.util.DataUtil;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.api.GetChildrenBuilder;
 import org.apache.curator.framework.api.transaction.CuratorOp;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Base64;
+import java.util.List;
 
 public class ValidationPropertyServiceImpl extends ZnodePropertyServiceImpl {
     public ValidationPropertyServiceImpl(String zNodePath) {
@@ -25,8 +32,34 @@ public class ValidationPropertyServiceImpl extends ZnodePropertyServiceImpl {
     @Override
     public String getData(CuratorFramework client, String znode) throws Exception {
         byte[] bytes = client.getData().forPath(getPath(znode));
-        String rawValue = new String(bytes);
-        byte[] decodedBytes = Base64.getDecoder().decode(rawValue);
-        return new String(decodedBytes);
+        return DataUtil.decodeString(bytes);
+    }
+
+    public File generateFile(CuratorFramework client, String znode, String fileName) throws Exception {
+        File property = File.createTempFile(fileName, ".properties");
+        FileWriter fileWriter = new FileWriter(property);
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(fileWriter);
+            if (exists(client, znode)) {
+                GetChildrenBuilder childrenBuilder = client.getChildren();
+                List<String> childNodes = childrenBuilder.forPath(getPath(znode));
+                if (childNodes != null) {
+                    for (String cnode : childNodes) {
+                        String jsonArray = getData(client, cnode);
+                        List<DataPair> dataPairList = DataUtil.getAsList(jsonArray);
+                        for (DataPair dataPair : dataPairList) {
+                            String line = DataUtil.printAsKeyValue(dataPair);
+                            printWriter.println(line);
+                        }
+                    }
+                }
+            }
+        } finally {
+            if (printWriter != null) {
+                printWriter.close();
+            }
+        }
+        return property;
     }
 }

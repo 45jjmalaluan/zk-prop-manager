@@ -22,7 +22,7 @@ E.g. Validation path structure
 
 #### POST
 
-`http://localhost:8054/properties`
+`http://localhost:8054/validation/properties`
 
 Request Body:
 ```
@@ -43,10 +43,14 @@ Request Body:
 
 #### GET
 
-`http://localhost:8054/properties/personal`
+`http://localhost:8054/properties/validation/personal`
 
 #### DELETE
 
-`http://localhost:8054/properties/personal`
+`http://localhost:8054/properties/validation/personal`
+
+#### GET
+
+`http://localhost:8054/properties/validation/file`
 
 
