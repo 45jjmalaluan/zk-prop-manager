@@ -3,12 +3,12 @@ package com.zk.prop.manager.core.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class ValidationModel implements Serializable {
     private static final long serialVersionUID = -223302374398156927L;
@@ -18,22 +18,8 @@ public class ValidationModel implements Serializable {
     @Size(min = 1)
     private String node;
     @JsonProperty
-    @NotNull
-    @Size(min = 1)
-    private String key;
-    @JsonProperty
-    @NotNull
-    @Size(min = 1)
-    private String regExp;
-
-    public ValidationModel(String node, String key, String regExp) {
-        setNode(node);
-        setKey(key);
-        setRegExp(regExp);
-    }
-
-    public ValidationModel() {
-    }
+    @NotEmpty
+    private List<DataPair> dataPair;
 
     public String getNode() {
         return node;
@@ -43,26 +29,16 @@ public class ValidationModel implements Serializable {
         this.node = node;
     }
 
-    public String getKey() {
-        return key;
+    public List<DataPair> getDataPair() {
+        return dataPair;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getRegExp() {
-        return regExp;
-    }
-
-    public void setRegExp(String regExp) {
-        this.regExp = regExp;
+    public void setDataPair(List<DataPair> dataPair) {
+        this.dataPair = dataPair;
     }
 
     public String toJson() throws JsonProcessingException {
-        Map<String, String> modelMap = new HashMap<>();
-        modelMap.put(key, regExp);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(modelMap);
+        return mapper.writeValueAsString(getDataPair());
     }
 }

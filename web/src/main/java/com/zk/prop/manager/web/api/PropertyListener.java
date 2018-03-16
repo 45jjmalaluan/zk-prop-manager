@@ -1,7 +1,9 @@
 package com.zk.prop.manager.web.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zk.prop.manager.core.ZooKeeperConnection;
+import com.zk.prop.manager.core.model.DataPair;
 import com.zk.prop.manager.core.model.ValidationModel;
 import com.zk.prop.manager.core.service.ValidationPropertyServiceImpl;
 import org.apache.curator.framework.CuratorFramework;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -65,19 +68,23 @@ public class PropertyListener {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity getOne(@PathVariable("node") String znode) {
-        String json;
+        Map<String, List<DataPair>> jsonMap = new HashMap<>();
         try {
             CuratorFramework client = zooKeeperConnection.openClient(zkConnectString);
             if (!validationPropertyService.exists(client, znode)) {
                 return ResponseEntity.notFound().build();
             }
-            json = validationPropertyService.getData(client, znode);
+            String jsonArray = validationPropertyService.getData(client, znode);
+            ObjectMapper mapper = new ObjectMapper();
+            List<DataPair> dataPair = mapper.readValue(jsonArray, List.class);
+            jsonMap.put("dataPair", dataPair);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             zooKeeperConnection.closeClient();
         }
-        return new ResponseEntity<>(json, HttpStatus.OK);
+
+        return new ResponseEntity<>(jsonMap, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{node}", method = RequestMethod.DELETE,

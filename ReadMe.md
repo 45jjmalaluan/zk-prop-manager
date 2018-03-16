@@ -28,8 +28,16 @@ Request Body:
 ```
 {
   "node": "personal",
-  "key": "name",
-  "regExp": "[A-Z][a-z]*( [A-Z][a-z]*)*"
+  "dataPair": [
+    {
+      "key": "name",
+      "regExp": "[A-Z][a-z]*( [A-Z][a-z]*)*"
+    },
+    {
+      "key": "spouse_name",
+      "regExp": "[A-Z][a-z]*( [A-Z][a-z]*)*"
+    }
+  ]
 }
 ```
 
